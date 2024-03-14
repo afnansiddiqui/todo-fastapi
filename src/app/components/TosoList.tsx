@@ -10,6 +10,7 @@ const TodoList = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodoContent, setNewTodoContent] = useState<string>("");
     const [deleteTodoId, setDeleteTodoId] = useState<number | null>(null);
+    const [serverStatus, setServerStatus] = useState<boolean>(true); // Default status: Server is up
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -24,8 +25,10 @@ const TodoList = () => {
                 }
                 const data = await response.json();
                 setTodos(data);
+                setServerStatus(true); // Server is up
             } catch (error) {
                 console.error("Error fetching todos:", error);
+                setServerStatus(false); // Server is down
             }
         };
 
@@ -84,44 +87,50 @@ const TodoList = () => {
     return (
         <div className="max-w-md mx-auto mt-8">
             <h1 className="text-3xl font-bold text-center mb-4">Todo List</h1>
-            <div className="mb-4 flex items-center">
-                <input
-                    type="text"
-                    value={newTodoContent}
-                    onChange={(e) => setNewTodoContent(e.target.value)}
-                    placeholder="Enter new todo..."
-                    className="border-gray-300 border rounded-md px-4 py-2 w-full"
-                />
-                <button
-                    onClick={createTodo}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
-                >
-                    Add Todo
-                </button>
-            </div>
-            <div className="mb-4 flex items-center">
-                <input
-                    type="number"
-                    value={deleteTodoId || ''}
-                    onChange={(e) => setDeleteTodoId(parseInt(e.target.value))}
-                    placeholder="Enter ID of todo to delete..."
-                    className="border-gray-300 border rounded-md px-4 py-2 w-full"
-                />
-                <button
-                    onClick={deleteTodo}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md ml-2"
-                >
-                    Delete Todo
-                </button>
-            </div>
-            <ul className="divide-y divide-gray-200">
-                {todos.map((todo) => (
-                    <li key={todo.id} className="py-4">
-                        <span className="block font-semibold">ID: {todo.id}</span>
-                        <span className="block">{todo.content}</span>
-                    </li>
-                ))}
-            </ul>
+            {serverStatus ? (
+                <>
+                    <div className="mb-4 flex items-center">
+                        <input
+                            type="text"
+                            value={newTodoContent}
+                            onChange={(e) => setNewTodoContent(e.target.value)}
+                            placeholder="Enter new todo..."
+                            className="border-gray-300 border rounded-md px-4 py-2 w-full"
+                        />
+                        <button
+                            onClick={createTodo}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+                        >
+                            Add Todo
+                        </button>
+                    </div>
+                    <div className="mb-4 flex items-center">
+                        <input
+                            type="number"
+                            value={deleteTodoId || ''}
+                            onChange={(e) => setDeleteTodoId(parseInt(e.target.value))}
+                            placeholder="Enter ID of todo to delete..."
+                            className="border-gray-300 border rounded-md px-4 py-2 w-full"
+                        />
+                        <button
+                            onClick={deleteTodo}
+                            className="bg-red-500 text-white px-4 py-2 rounded-md ml-2"
+                        >
+                            Delete Todo
+                        </button>
+                    </div>
+                    <ul className="divide-y divide-gray-200">
+                        {todos.map((todo) => (
+                            <li key={todo.id} className="py-4">
+                                <span className="block font-semibold">ID: {todo.id}</span>
+                                <span className="block">{todo.content}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            ) : (
+                <p className="text-red-500 text-center">Server is currently down. Please try again later.</p>
+            )}
         </div>
     );
 };
