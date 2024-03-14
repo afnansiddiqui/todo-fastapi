@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from "react";
 
 interface Todo {
@@ -29,8 +29,10 @@ const TodoList = () => {
             }
         };
 
-        fetchTodos();
-    }, []);
+        const interval = setInterval(fetchTodos, 1000); // Fetch todos every second
+
+        return () => clearInterval(interval); // Clean up setInterval on component unmount
+    }, []); // Empty dependency array ensures useEffect runs only once
 
     const createTodo = async () => {
         try {
