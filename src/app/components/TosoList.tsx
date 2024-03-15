@@ -10,7 +10,7 @@ const TodoList = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodoContent, setNewTodoContent] = useState<string>("");
     const [deleteTodoId, setDeleteTodoId] = useState<number | null>(null);
-    const [serverStatus, setServerStatus] = useState<boolean>(true); // Default status: Server is up
+    const [serverStatus, setServerStatus] = useState<boolean>(true); // Default status: Server is up 
 
     useEffect(() => {
         const fetchTodos = async () => {
